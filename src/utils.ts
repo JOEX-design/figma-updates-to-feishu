@@ -78,7 +78,7 @@ export const sendFeishuMessage = async (event: TEvent): Promise<void> => {
     card: message,
   };
   console.log(FEISHU_WEBHOOK_URL);
-  console.log(payload);
+  console.log(JSON.stringify(payload));
 
   try {
     await fetch(FEISHU_WEBHOOK_URL, {
