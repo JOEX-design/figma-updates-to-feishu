@@ -16,26 +16,56 @@ export const getEventType = (requestBody: any): EEvents | null => {
   return null;
 };
 
-const getMessage = (event: TEvent): string => {
+const getMessage = (event: TEvent): object => {
   const getFileUrl = (fileKey: string, fileName: string) => `https://www.figma.com/file/${fileKey}/${fileName.replace(/ /g, '-')}`;
 
   switch (event.event_type) {
     case EEvents.LIBRARY_PUBLISH:
       const libraryUpdate = event as ILibraryPublish;
-      return `
-        🎉 New Update on ${libraryUpdate.file_name}
-        \n\`\`\`${libraryUpdate.description}\n\`\`\`
-        \n-${libraryUpdate.triggered_by.handle}
-        \n${getFileUrl(libraryUpdate.file_key, libraryUpdate.file_name)}
-        `;
+      const cardData = {
+        elements: [
+          {
+            tag: 'div',
+            text: {
+              content: `文件: **${libraryUpdate.file_name}**
+              \n用户: **${libraryUpdate.triggered_by.handle}**
+              \n描述: **${libraryUpdate.description}**`,
+              tag: 'lark_md',
+            },
+          },
+          {
+            tag: 'action',
+            actions: [
+              {
+                tag: 'button',
+                text: {
+                  content: '查看变更',
+                  tag: 'lark_md',
+                },
+                url: `${getFileUrl(libraryUpdate.file_key, libraryUpdate.file_name)}`,
+                type: 'default',
+                value: {},
+              },
+            ],
+          },
+        ],
+        header: {
+          title: {
+            content: '🧩 Figma Library 有更新啦',
+            tag: 'plain_text',
+          },
+        },
+      };
+      return cardData;
     case EEvents.FILE_DELETE:
-      const fileDelete = event as IFileDete;
-      return `
-        🗑️ ${fileDelete.file_name} is deleted by ${fileDelete.triggered_by.handle}
-        \n${getFileUrl(fileDelete.file_key, fileDelete.file_name)}
-        `;
+      // const fileDelete = event as IFileDete;
+      // return `
+      //   🗑️ ${fileDelete.file_name} is deleted by ${fileDelete.triggered_by.handle}
+      //   \n${getFileUrl(fileDelete.file_key, fileDelete.file_name)}
+      //   `;
+      return {};
     default:
-      return '';
+      return {};
   }
 };
 
@@ -44,11 +74,11 @@ const FEISHU_WEBHOOK_URL = process.env.FEISHU_WEBHOOK_URL as string;
 export const sendFeishuMessage = async (event: TEvent): Promise<void> => {
   const message = getMessage(event);
   const payload = {
-    msg_type: 'text',
-    content: {
-      text: message,
-    },
+    msg_type: 'interactive',
+    card: message,
   };
+  console.log(FEISHU_WEBHOOK_URL);
+  console.log(payload);
 
   try {
     await fetch(FEISHU_WEBHOOK_URL, {
