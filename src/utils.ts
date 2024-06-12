@@ -81,14 +81,17 @@ export const sendFeishuMessage = async (event: TEvent): Promise<void> => {
   console.log(JSON.stringify(payload));
 
   try {
-    await fetch(FEISHU_WEBHOOK_URL, {
+    const response = await fetch(FEISHU_WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
     });
+    const body = await response.json();
+    console.log('飞书推送成功', body);
   } catch (error) {
+    console.log('飞书推送失败', JSON.stringify(error));
     throw new Error(`Error posting to Feishu: ${error}`);
   }
 };
