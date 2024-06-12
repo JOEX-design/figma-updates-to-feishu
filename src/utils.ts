@@ -41,9 +41,14 @@ const getMessage = (event: TEvent): string => {
 
 const FEISHU_WEBHOOK_URL = process.env.FEISHU_WEBHOOK_URL as string;
 
-export const sendSlackMessage = async (event: TEvent): Promise<void> => {
+export const sendFeishuMessage = async (event: TEvent): Promise<void> => {
   const message = getMessage(event);
-  const payload = { text: message };
+  const payload = {
+    msg_type: 'text',
+    content: {
+      text: message,
+    },
+  };
 
   try {
     await fetch(FEISHU_WEBHOOK_URL, {
@@ -54,6 +59,6 @@ export const sendSlackMessage = async (event: TEvent): Promise<void> => {
       body: JSON.stringify(payload),
     });
   } catch (error) {
-    throw new Error(`Error posting to Slack: ${error}`);
+    throw new Error(`Error posting to Feishu: ${error}`);
   }
 };

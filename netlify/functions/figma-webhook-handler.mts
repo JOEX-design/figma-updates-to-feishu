@@ -1,5 +1,5 @@
 import { Handler } from '@netlify/functions';
-import { getEventType, sendSlackMessage } from '../../src/utils';
+import { getEventType, sendFeishuMessage } from '../../src/utils';
 
 export const handler: Handler = async (event) => {
   try {
@@ -25,7 +25,7 @@ export const handler: Handler = async (event) => {
 
     if (eventType) {
       console.log(eventType);
-      sendSlackMessage(requestBody);
+      sendFeishuMessage(requestBody);
     }
 
     return {
