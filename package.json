@@ -20,6 +20,9 @@
   "dependencies": {
     "@netlify/functions": "^1.6.0",
     "@types/node": "^18.18.10",
+    "@vercel/edge": "^1.1.1",
+    "@vercel/functions": "^1.0.2",
+    "@vercel/node": "^3.1.7",
     "dotenv": "^16.3.1"
   }
 }
