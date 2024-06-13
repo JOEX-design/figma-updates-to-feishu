@@ -1,7 +1,7 @@
-import { Handler } from '@netlify/functions';
+// import { Handler } from '@netlify/functions';
 import { getEventType, sendFeishuMessage } from '../../src/utils';
 
-export const handler: Handler = async (event) => {
+export const handler = async (event: { httpMethod: string; body: string; }) => {
   try {
     const PASSCODE = process.env.PASSCODE as string;
 
