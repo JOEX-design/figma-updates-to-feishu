@@ -2,7 +2,6 @@
 import 'dotenv/config';
 import {
   EEvents,
-  IFileDete,
   ILibraryPublish,
   TEvent,
 } from '../types';
