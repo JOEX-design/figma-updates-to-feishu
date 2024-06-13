@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { waitUntil } from '@vercel/functions';
+// import { waitUntil } from '@vercel/functions';
 import { getEventType, sendFeishuMessage } from '../src/utils';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // const { name = 'World' } = req.query;
   // return res.json({
   //   message: `Hello ${name}!`,
@@ -27,19 +27,25 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
     const eventType = getEventType(requestBody);
 
-    if (eventType) {
-      console.log(eventType);
-      waitUntil(sendFeishuMessage(requestBody).then((json) => {
-        console.log(json);
-      }));
-      // context.waitUntil(sendFeishuMessage(requestBody).then((json) => {
-      //   console.log(json);
-      // }));
-    }
+    console.log(eventType);
+
+    await sendFeishuMessage(requestBody);
 
     return res.status(200).json({
-      message: 'OK',
+      message: 'ok',
     });
+    // if (eventType) {
+    //   console.log(eventType);
+    //   waitUntil(sendFeishuMessage(requestBody).then((json) => {
+    //     console.log('Push to Feishu: ', JSON.stringify(json));
+    //   }));
+    //   // context.waitUntil(sendFeishuMessage(requestBody).then((json) => {
+    //   //   console.log(json);
+    //   // }));
+    // }
+    // return res.status(400).json({
+    //   message: 'not working',
+    // });
   } catch (error) {
     console.error('Error: ', error);
     return res.status(500).json({
